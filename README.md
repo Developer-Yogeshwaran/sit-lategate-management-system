@@ -39,11 +39,9 @@ A **Spring Boot-based web application** to manage **late student entries** in co
 ---
 
 ## 🌐 Live Demo
-
+first you clone the file and run backend springboot
 You can run the application locally:  
 **Local URL:** [http://localhost:8080](http://localhost:8080)  
-
-*(Optional: Add your live deployment link here)*
 
 ---
 
