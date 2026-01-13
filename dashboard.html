@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Late Gate System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container glass">
+    <div class="header">
+
+        <!-- LEFT: Logo -->
+        <div class="logo-wrapper">
+            <img src="sethu-logo.jpg" alt="College Logo" class="logo">
+        </div>
+
+        <!-- CENTER: Title -->
+        <h2 class="big-title">Late Entry Dashboard</h2>
+
+        <!-- RIGHT: Theme Toggle -->
+        <div class="header-right">
+            <div id="themeToggle" class="theme-toggle" role="button" aria-label="Toggle theme" tabindex="0">
+                <div class="knob">
+                    <!-- Sun -->
+                    <svg class="icon sun" viewBox="0 0 24 24">
+                        <path d="M6.76 4.84l-1.8-1.79L3.17 4.84l1.79 1.79 1.8-1.79zM1 13h3v-2H1v2zm10-9h2V1h-2v3zm7.03 2.05l1.79-1.79-1.79-1.79-1.79 1.79 1.79 1.79zM17 13h3v-2h-3v2zM12 7a5 5 0 100 10 5 5 0 000-10zm4.24 9.16l1.8 1.79 1.79-1.79-1.79-1.79-1.8 1.79zM11 23h2v-3h-2v3zM4.24 18.36l-1.79 1.79 1.79 1.79 1.8-1.79-1.8-1.79z"/>
+                    </svg>
+                    <!-- Moon -->
+                    <svg class="icon moon" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="accent-line"></div>
+
+    <input type="text" id="roll" placeholder="Student Roll Number">
+
+    <label for="reason" style="display:block; text-align:left; width:86%; margin:6px auto 4px; font-size:13px;">
+        Reason for Late Entry
+    </label>
+
+    <select id="reason">
+        <option>Overslept</option>
+        <option>Transport Delay</option>
+        <option>Medical Appointment</option>
+        <option>Personal Work</option>
+        <option>Other</option>
+    </select>
+
+    <button onclick="addLateEntry()">Add Late Entry</button>
+
+    <h3>Late Students List</h3>
+    <ul id="list"></ul>
+
+    <div class="footer">
+        Admin Dashboard
+        <div class="credit">Made by A YOGESHWARAN</div>
+    </div>
+</div>
+
+<!-- JS unchanged -->
+<script>
+function addLateEntry() {
+    fetch('/late-entry/add', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            rollNo: roll.value,
+            reason: reason.value,
+            time: new Date().toLocaleTimeString()
+        })
+    }).then(() => {
+        roll.value = "";
+        loadEntries();
+    });
+}
+
+function loadEntries() {
+    fetch('/late-entry/all')
+        .then(res => res.json())
+        .then(data => {
+            list.innerHTML = "";
+            data.forEach(e =>
+                list.innerHTML += `<li><b>${e.rollNo}</b> | ${e.reason} | ${e.time}</li>`
+            );
+        });
+}
+loadEntries();
+</script>
+
+<script>
+(function(){
+    const toggle = document.getElementById('themeToggle');
+    const saved = localStorage.getItem('lateentry-theme') || 'light';
+    document.body.classList.toggle('dark', saved === 'dark');
+
+    toggle.onclick = () => {
+        const dark = document.body.classList.toggle('dark');
+        localStorage.setItem('lateentry-theme', dark ? 'dark' : 'light');
+    };
+})();
+</script>
+
+</body>
+</html>

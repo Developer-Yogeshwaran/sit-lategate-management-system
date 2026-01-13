@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login | Late Gate System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container glass">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="top-bar">
+            <!-- College Logo -->
+            <img src="sethu-logo.jpg" alt="College Logo" class="logo">
+
+            <!-- Theme Toggle -->
+            <div id="themeToggle" class="theme-toggle" tabindex="0">
+                <div class="knob">
+                    <!-- Sun -->
+                    <svg class="icon sun" viewBox="0 0 20 25">
+                        <path d="M12 7a5 5 0 100 10 5 5 0 000-10z"/>
+                    </svg>
+
+                    <!-- Moon -->
+                    <svg class="icon moon" viewBox="0 0 20 25">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="big-title">ADMIN – LATE GATE ENTRY</h2>
+    </div>
+
+    <div class="accent-line"></div>
+
+    <!-- LOGIN FORM -->
+    <input type="text" id="u" placeholder="Enter Username">
+    <input type="password" id="p" placeholder="Enter Password">
+    <button onclick="login()">Login</button>
+    <p id="msg"></p>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        College Late Gate Management System
+        <div class="credit">Made by A YOGESHWARAN</div>
+    </div>
+
+</div>
+
+<script>
+function login() {
+    fetch('/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            username: document.getElementById('u').value,
+            password: document.getElementById('p').value
+        })
+    })
+    .then(res => res.text())
+    .then(data => {
+        if (data.includes("Successful")) {
+            window.location.href = "dashboard.html";
+        } else {
+            document.getElementById("msg").innerText = "Invalid Username or Password";
+        }
+    });
+}
+
+// Theme Toggle
+const toggle = document.getElementById("themeToggle");
+toggle.onclick = () => {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+    );
+};
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+}
+</script>
+
+</body>
+</html>
